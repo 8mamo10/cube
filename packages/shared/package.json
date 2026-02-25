@@ -1,0 +1,16 @@
+{
+  "name": "@stamp-card/shared",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for stamp card system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
