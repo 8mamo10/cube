@@ -2,8 +2,15 @@
   "name": "@stamp-card/shared",
   "version": "1.0.0",
   "description": "Shared TypeScript types for stamp card system",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",

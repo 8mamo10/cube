@@ -1,0 +1,1 @@
+{"version":3,"file":"refresh.strategy.d.ts","sourceRoot":"","sources":["refresh.strategy.ts"],"names":[],"mappings":"AAEA,OAAO,EAAc,QAAQ,EAAE,MAAM,cAAc,CAAC;AAEpD,OAAO,EAAE,YAAY,EAAE,MAAM,2BAA2B,CAAC;;AAEzD,qBACa,eAAgB,SAAQ,oBAAyC;IAChE,OAAO,CAAC,YAAY;gBAAZ,YAAY,EAAE,YAAY;IAYxC,QAAQ,CAAC,OAAO,EAAE;QAAE,GAAG,EAAE,MAAM,CAAC;QAAC,KAAK,EAAE,MAAM,CAAA;KAAE;CAOvD"}

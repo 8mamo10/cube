@@ -28,14 +28,61 @@
    npm run backend
    ```
 
+   **Note:** This automatically builds the shared package first, then starts the backend server.
+
 6. **Start frontend (in another terminal):**
    ```bash
    npm run frontend
    ```
 
+   **Note:** This also builds the shared package automatically.
+
 7. **Open browser:**
    - Frontend: http://localhost:5173
    - API Docs: http://localhost:3000/api
+
+## Understanding the Build Process
+
+This project uses a **monorepo structure** with a shared TypeScript package:
+
+```
+packages/
+├── shared/      # Shared types (TypeScript)
+├── backend/     # NestJS API (imports from shared)
+└── frontend/    # React app (imports from shared)
+```
+
+### Why Build the Shared Package?
+
+The `@stamp-card/shared` package contains TypeScript type definitions that both backend and frontend use. However:
+
+- **TypeScript files (.ts) cannot be directly imported** by JavaScript runtimes
+- They must be **compiled to JavaScript (.js)** first
+
+When you run `npm run backend` or `npm run frontend`, it:
+1. **Builds** `packages/shared/src/*.ts` → `packages/shared/dist/*.js`
+2. Then starts the backend/frontend, which import from `packages/shared/dist/`
+
+### Generated Files
+
+After building, you'll see a `dist/` folder in the shared package:
+
+```
+packages/shared/
+├── src/              # Source TypeScript files (you edit these)
+│   └── types/
+│       ├── user.types.ts
+│       ├── card.types.ts
+│       └── ...
+└── dist/             # Compiled output (auto-generated, don't edit)
+    ├── types/
+    │   ├── user.types.js      # JavaScript
+    │   ├── user.types.d.ts    # Type definitions
+    │   └── ...
+    └── index.js
+```
+
+**Important:** The `dist/` folder is auto-generated and ignored by git. Don't edit these files directly!
 
 ## Test the Application
 
@@ -104,10 +151,39 @@ Edit `packages/frontend/vite.config.ts` and change the port in server config.
 ### TypeScript Errors
 
 ```bash
-# Clean and rebuild
+# Clean and rebuild all packages
 rm -rf node_modules package-lock.json
 rm -rf packages/*/node_modules
 npm install
+```
+
+### Shared Package Import Errors
+
+If you see errors like "Cannot find module '@stamp-card/shared'":
+
+```bash
+# Manually rebuild the shared package
+cd packages/shared
+rm -rf dist
+npm run build
+cd ../..
+
+# Then restart backend/frontend
+npm run backend
+# or
+npm run frontend
+```
+
+### Module Not Found Errors
+
+If the backend/frontend can't find the shared package after changes:
+
+```bash
+# Clean and rebuild shared package
+rm -rf packages/shared/dist
+npm run build:shared
+
+# Restart the affected service
 ```
 
 ### Camera Not Working

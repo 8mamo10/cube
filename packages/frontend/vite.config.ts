@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@stamp-card/shared': path.resolve(__dirname, '../shared/src'),
+      '@stamp-card/shared': path.resolve(__dirname, '../shared/dist'),
     },
   },
   server: {

@@ -17,7 +17,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@stamp-card/shared": ["../shared/src"],
+      "@stamp-card/shared": ["../shared/dist"],
       "@/*": ["./src/*"]
     }
   },
