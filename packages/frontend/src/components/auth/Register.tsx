@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '@stamp-card/shared';
@@ -11,8 +11,15 @@ export const Register = () => {
   const [role, setRole] = useState<UserRole>(UserRole.CUSTOMER);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const destination = user.role === UserRole.CUSTOMER ? '/customer' : '/staff';
+      navigate(destination, { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +28,7 @@ export const Register = () => {
 
     try {
       await register(email, password, role, firstName, lastName);
-      navigate(role === UserRole.CUSTOMER ? '/customer' : '/staff');
+      // Navigation will happen automatically via useEffect when user state updates
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to register');
     } finally {

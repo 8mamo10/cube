@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '@stamp-card/shared';
@@ -11,10 +11,12 @@ export const Login = () => {
   const { login, user } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    navigate(user.role === UserRole.CUSTOMER ? '/customer' : '/staff');
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      const destination = user.role === UserRole.CUSTOMER ? '/customer' : '/staff';
+      navigate(destination, { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,12 +25,7 @@ export const Login = () => {
 
     try {
       await login(email, password);
-      const currentUser = user;
-      if (currentUser?.role === UserRole.CUSTOMER) {
-        navigate('/customer');
-      } else if (currentUser?.role === UserRole.STAFF || currentUser?.role === UserRole.ADMIN) {
-        navigate('/staff');
-      }
+      // Navigation will happen automatically via useEffect when user state updates
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to login');
     } finally {
