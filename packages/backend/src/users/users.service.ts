@@ -26,6 +26,8 @@ export class UsersService {
       role: createUserDto.role,
       firstName: createUserDto.firstName,
       lastName: createUserDto.lastName,
+      gender: createUserDto.gender,
+      ageRange: createUserDto.ageRange,
     });
 
     return this.usersRepository.save(user);

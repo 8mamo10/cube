@@ -1,5 +1,5 @@
 import { api, apiService } from './api.service';
-import { User, LoginDto, AuthResponse, UserRole } from '@stamp-card/shared';
+import { User, LoginDto, AuthResponse, UserRole, Gender, AgeRange } from '@stamp-card/shared';
 
 interface RegisterDto {
   email: string;
@@ -7,6 +7,8 @@ interface RegisterDto {
   role: UserRole;
   firstName: string;
   lastName: string;
+  gender?: Gender;
+  ageRange?: AgeRange;
 }
 
 export const authService = {

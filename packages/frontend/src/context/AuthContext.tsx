@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, UserRole } from '@stamp-card/shared';
+import { User, UserRole, Gender, AgeRange } from '@stamp-card/shared';
 import { authService } from '../services/auth.service';
 
 interface AuthContextType {
@@ -11,7 +11,9 @@ interface AuthContextType {
     password: string,
     role: UserRole,
     firstName: string,
-    lastName: string
+    lastName: string,
+    gender?: Gender,
+    ageRange?: AgeRange
   ) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -47,7 +49,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     password: string,
     role: UserRole,
     firstName: string,
-    lastName: string
+    lastName: string,
+    gender?: Gender,
+    ageRange?: AgeRange
   ) => {
     const response = await authService.register({
       email,
@@ -55,6 +59,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       role,
       firstName,
       lastName,
+      gender,
+      ageRange,
     });
     setUser(response.user);
   };

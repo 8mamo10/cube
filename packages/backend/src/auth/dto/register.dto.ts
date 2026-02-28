@@ -1,5 +1,5 @@
-import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty } from 'class-validator';
-import { UserRole } from '@stamp-card/shared';
+import { IsEmail, IsString, MinLength, IsEnum, IsNotEmpty, ValidateIf } from 'class-validator';
+import { UserRole, Gender, AgeRange } from '@stamp-card/shared';
 
 export class RegisterDto {
   @IsEmail()
@@ -19,4 +19,14 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  @ValidateIf(o => o.role === UserRole.CUSTOMER)
+  @IsEnum(Gender)
+  @IsNotEmpty()
+  gender?: Gender;
+
+  @ValidateIf(o => o.role === UserRole.CUSTOMER)
+  @IsEnum(AgeRange)
+  @IsNotEmpty()
+  ageRange?: AgeRange;
 }

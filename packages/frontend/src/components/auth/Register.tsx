@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { UserRole } from '@stamp-card/shared';
+import { UserRole, Gender, AgeRange } from '@stamp-card/shared';
 
 export const Register = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +9,8 @@ export const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState<UserRole>(UserRole.CUSTOMER);
+  const [gender, setGender] = useState<Gender>(Gender.UNSPECIFIED);
+  const [ageRange, setAgeRange] = useState<AgeRange>(AgeRange.RANGE_18_29);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register, user } = useAuth();
@@ -27,7 +29,15 @@ export const Register = () => {
     setLoading(true);
 
     try {
-      await register(email, password, role, firstName, lastName);
+      await register(
+        email,
+        password,
+        role,
+        firstName,
+        lastName,
+        role === UserRole.CUSTOMER ? gender : undefined,
+        role === UserRole.CUSTOMER ? ageRange : undefined
+      );
       // Navigation will happen automatically via useEffect when user state updates
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to register');
@@ -95,6 +105,48 @@ export const Register = () => {
                 />
               </div>
             </div>
+
+            {role === UserRole.CUSTOMER && (
+              <>
+                <div>
+                  <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+                    Gender
+                  </label>
+                  <select
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value as Gender)}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value={Gender.MALE}>Male</option>
+                    <option value={Gender.FEMALE}>Female</option>
+                    <option value={Gender.UNSPECIFIED}>Prefer not to say</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="ageRange" className="block text-sm font-medium text-gray-700">
+                    Age Range
+                  </label>
+                  <select
+                    id="ageRange"
+                    value={ageRange}
+                    onChange={(e) => setAgeRange(e.target.value as AgeRange)}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value={AgeRange.UNDER_18}>Under 18</option>
+                    <option value={AgeRange.RANGE_18_29}>18-29</option>
+                    <option value={AgeRange.RANGE_30_39}>30-39</option>
+                    <option value={AgeRange.RANGE_40_49}>40-49</option>
+                    <option value={AgeRange.RANGE_50_59}>50-59</option>
+                    <option value={AgeRange.RANGE_60_69}>60-69</option>
+                    <option value={AgeRange.OVER_70}>70 and over</option>
+                  </select>
+                </div>
+              </>
+            )}
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">

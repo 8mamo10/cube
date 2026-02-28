@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from '@stamp-card/shared';
+import { UserRole, Gender, AgeRange } from '@stamp-card/shared';
 import { StampCard } from '../../cards/entities/card.entity';
 import { QRCode } from '../../qr/entities/qr-code.entity';
 
@@ -35,6 +35,21 @@ export class User {
 
   @Column({ name: 'last_name' })
   lastName: string;
+
+  @Column({
+    type: 'enum',
+    enum: Gender,
+    nullable: true,
+  })
+  gender?: Gender;
+
+  @Column({
+    type: 'enum',
+    enum: AgeRange,
+    name: 'age_range',
+    nullable: true,
+  })
+  ageRange?: AgeRange;
 
   @OneToMany(() => StampCard, (card) => card.user)
   cards: StampCard[];
