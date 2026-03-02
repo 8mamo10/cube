@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { ProductSelection } from '@stamp-card/shared';
 import { staffService } from '../../services/staff.service';
@@ -9,27 +9,58 @@ export const QRScanner: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const isInitializedRef = useRef(false);
 
-  React.useEffect(() => {
+  const initializeScanner = () => {
+    if (isInitializedRef.current || scannerRef.current) {
+      return;
+    }
+
+    // Clear any existing DOM elements from previous scanner instances
+    const readerElement = document.getElementById('qr-reader');
+    if (readerElement) {
+      readerElement.innerHTML = '';
+    }
+
+    isInitializedRef.current = true;
     const qrScanner = new Html5QrcodeScanner(
       'qr-reader',
       { fps: 10, qrbox: { width: 250, height: 250 } },
       false,
     );
 
+    scannerRef.current = qrScanner;
+
     qrScanner.render(
       (decodedText) => {
         setScannedQR(decodedText);
         setIsModalOpen(true);
-        qrScanner.clear();
+        qrScanner.clear().catch(() => {});
+        scannerRef.current = null;
+        isInitializedRef.current = false;
       },
       () => {
         // Ignore scanning errors
       },
     );
+  };
+
+  useEffect(() => {
+    initializeScanner();
 
     return () => {
-      qrScanner.clear();
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(() => {});
+        scannerRef.current = null;
+      }
+      isInitializedRef.current = false;
+
+      // Clean up any remaining DOM elements
+      const readerElement = document.getElementById('qr-reader');
+      if (readerElement) {
+        readerElement.innerHTML = '';
+      }
     };
   }, []);
 
@@ -48,33 +79,26 @@ export const QRScanner: React.FC = () => {
       // Restart scanner after success
       setTimeout(() => {
         setSuccess(null);
-        const qrScanner = new Html5QrcodeScanner(
-          'qr-reader',
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          false,
-        );
-
-        qrScanner.render(
-          (decodedText) => {
-            setScannedQR(decodedText);
-            setIsModalOpen(true);
-            qrScanner.clear();
-          },
-          () => {
-            // Ignore scanning errors
-          },
-        );
+        initializeScanner();
       }, 2000);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to award stamp');
       setIsModalOpen(false);
       setScannedQR(null);
+      // Restart scanner after error
+      setTimeout(() => {
+        initializeScanner();
+      }, 1000);
     }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
     setScannedQR(null);
+    // Restart scanner after cancel
+    setTimeout(() => {
+      initializeScanner();
+    }, 500);
   };
 
   return (
