@@ -13,7 +13,9 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      const destination = user.role === UserRole.CUSTOMER ? '/customer' : '/staff';
+      const destination =
+        user.role === UserRole.CUSTOMER ? '/customer' :
+        user.role === UserRole.ADMIN ? '/admin' : '/staff';
       navigate(destination, { replace: true });
     }
   }, [user, navigate]);

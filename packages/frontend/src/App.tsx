@@ -5,6 +5,7 @@ import { Login } from './components/auth/Login';
 import { Register } from './components/auth/Register';
 import { CustomerDashboard } from './pages/CustomerDashboard';
 import { StaffDashboard } from './pages/StaffDashboard';
+import { AdminDashboard } from './pages/AdminDashboard';
 import { UserRole } from '@stamp-card/shared';
 
 function App() {
@@ -29,6 +30,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={[UserRole.STAFF, UserRole.ADMIN]}>
                 <StaffDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
