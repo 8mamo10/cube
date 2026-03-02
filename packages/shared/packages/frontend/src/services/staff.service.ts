@@ -1,4 +1,4 @@
-import { api } from './api.service';
+import { apiClient } from '../utils/api';
 import {
   AwardStampResponse,
   ProductSelection,
@@ -9,7 +9,7 @@ export const staffService = {
     qrCode: string,
     products: ProductSelection[],
   ): Promise<AwardStampResponse> {
-    const response = await api.post<AwardStampResponse>(
+    const response = await apiClient.post<AwardStampResponse>(
       '/staff/award-stamp',
       { qrCode, products },
     );
@@ -17,7 +17,7 @@ export const staffService = {
   },
 
   async getHistory(): Promise<any[]> {
-    const response = await api.get<any[]>('/staff/history');
+    const response = await apiClient.get<any[]>('/staff/history');
     return response.data;
   },
 };

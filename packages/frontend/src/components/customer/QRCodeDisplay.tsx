@@ -40,6 +40,7 @@ export const QRCodeDisplay = () => {
 
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [expiresAt]);
 
   const formatTime = (ms: number) => {

@@ -10,6 +10,7 @@ import { StampsModule } from './stamps/stamps.module';
 import { QrModule } from './qr/qr.module';
 import { CustomerModule } from './customer/customer.module';
 import { StaffModule } from './staff/staff.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { StaffModule } from './staff/staff.module';
     QrModule,
     CustomerModule,
     StaffModule,
+    ProductsModule,
   ],
 })
 export class AppModule {}

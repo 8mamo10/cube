@@ -7,8 +7,10 @@ import { ProductSelectionModal } from './ProductSelectionModal';
 export const QRScanner: React.FC = () => {
   const [scannedQR, setScannedQR] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
 
   React.useEffect(() => {
     const qrScanner = new Html5QrcodeScanner(
@@ -23,10 +25,12 @@ export const QRScanner: React.FC = () => {
         setIsModalOpen(true);
         qrScanner.clear();
       },
-      () => {
+      (error) => {
         // Ignore scanning errors
       },
     );
+
+    setScanner(qrScanner);
 
     return () => {
       qrScanner.clear();
@@ -36,6 +40,7 @@ export const QRScanner: React.FC = () => {
   const handleConfirm = async (products: ProductSelection[]) => {
     if (!scannedQR) return;
 
+    setLoading(true);
     setError(null);
     setSuccess(null);
 
@@ -60,15 +65,19 @@ export const QRScanner: React.FC = () => {
             setIsModalOpen(true);
             qrScanner.clear();
           },
-          () => {
+          (error) => {
             // Ignore scanning errors
           },
         );
+
+        setScanner(qrScanner);
       }, 2000);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to award stamp');
       setIsModalOpen(false);
       setScannedQR(null);
+    } finally {
+      setLoading(false);
     }
   };
 

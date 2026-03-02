@@ -16,7 +16,7 @@ export class StaffController {
 
   @Post('award-stamp')
   awardStamp(@Body() dto: AwardStampDto, @CurrentUser() user: User) {
-    return this.staffService.awardStamp(dto.qrCode, user.id);
+    return this.staffService.awardStamp(dto.qrCode, user.id, dto.products);
   }
 
   @Get('history')

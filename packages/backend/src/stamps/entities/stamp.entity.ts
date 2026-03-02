@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { StampCard } from '../../cards/entities/card.entity';
 import { User } from '../../users/entities/user.entity';
+import { StampProduct } from './stamp-product.entity';
 
 @Entity('stamps')
 export class Stamp {
@@ -33,4 +35,7 @@ export class Stamp {
 
   @Column({ nullable: true })
   note: string | null;
+
+  @OneToMany(() => StampProduct, (stampProduct) => stampProduct.stamp)
+  stampProducts: StampProduct[];
 }
